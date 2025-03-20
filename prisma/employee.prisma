@@ -1,0 +1,109 @@
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model Employee {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName     String
+  lastName      String
+  gender        Gender
+  guardianName  String
+  personalEmail String
+  personalPhone String
+  aadharCard    String
+  panCard       String
+
+  // Separate IDs for permanent and current addresses
+  permanentAddressId String? @unique @db.ObjectId
+  currentAddressId   String? @unique @db.ObjectId
+
+  // One-to-one relations
+  bankDetailsId      String? @unique @db.ObjectId
+  companyInfoId      String? @unique @db.ObjectId
+  previousCompanyId  String? @unique @db.ObjectId
+  documentsId        String? @unique @db.ObjectId
+
+  // Relationships with different addresses
+  permanentAddress Address? @relation("PermanentAddress", fields: [permanentAddressId], references: [id])
+  currentAddress   Address? @relation("CurrentAddress", fields: [currentAddressId], references: [id])
+  
+  // One-to-one relations
+  bankDetails      BankDetails?
+  companyInfo      CompanyInfo?
+  previousCompany  PreviousCompany?
+  documents        Documents?
+}
+
+model Address {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  hNo     String?
+  city    String?
+  pincode String?
+  state   String?
+  country String?
+
+  // Reverse relations to Employee
+  permanentEmployee Employee? @relation("PermanentAddress")
+  currentEmployee   Employee? @relation("CurrentAddress")
+}
+
+model BankDetails {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  accountHolder  String?
+  accountNumber  String?
+  bankName       String?
+  ifscCode       String?
+  branchLocation String?
+  branchIdCode   String?
+  taxPayerId     String?
+  upiId          String?
+  employee       Employee @relation(fields: [employeeId], references: [id])
+  employeeId     String   @unique @db.ObjectId
+}
+
+model CompanyInfo {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  dateOfJoining   DateTime?
+  department      String?
+  designation     String?
+  role            String?
+  officialEmail   String?
+  assets          Json?
+  probationPeriod Json?
+  employee        Employee @relation(fields: [employeeId], references: [id])
+  employeeId      String   @unique @db.ObjectId
+}
+
+model PreviousCompany {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  companyName    String?
+  department     String?
+  designation    String?
+  officialEmail  String?
+  headName       String?
+  headContact    String?
+  companyContact String?
+  employee       Employee @relation(fields: [employeeId], references: [id])
+  employeeId     String   @unique @db.ObjectId
+}
+
+model Documents {
+  id                     String @id @default(auto()) @map("_id") @db.ObjectId
+  personalDetails        String?
+  relievingLetter        String?
+  paySlip                String?
+  bankStatement          String?
+  marksheet              String?
+  idProof                String?
+  addressProof           String?
+  resume                 String?
+  previousCompanyDetails String?
+  employee               Employee @relation(fields: [employeeId], references: [id])
+  employeeId             String   @unique @db.ObjectId
+}
+
+model employeeSalary {
+id                     String @id @default(auto()) @map("_id") @db.ObjectId
+}
