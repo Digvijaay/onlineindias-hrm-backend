@@ -33,22 +33,6 @@ export const getEmployees = async (req: Request, res: Response) => {
       currentAddress: currentAddress === "true",
     };
 
-    // // If ID is provided, fetch single employee
-    // if (id) {
-    //   const employee = await prisma.employee.findUnique({
-    //     where: { id },
-    //     include
-    //   });
-
-    //   if (!employee) {
-    //      res.status(404).json({ message: 'Employee not found' });
-    //      return;
-    //   }
-
-    //    res.json(employee);
-    //    return;
-    // }
-
     // For multiple employees
     const parsedLimit = parseInt(limit as string);
     const parsedPage = parseInt(page as string);
@@ -90,7 +74,6 @@ export const getEmployees = async (req: Request, res: Response) => {
 };
 
 // Get a single employee by ID
-
 export const getEmployeeById = async (
   req: Request<EmployeeIDParams>,
   res: Response
